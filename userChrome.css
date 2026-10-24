@@ -1,0 +1,101 @@
+/*
+ * Firefox Nova - Connected Tabs Fix
+ * Copyright (C) 2026 Abhishek B
+ * Licensed under GPL-3.0-or-later. See LICENSE for details.
+ */
+
+:root {
+  --uc-tab-radius: 10px;
+  --uc-flare-radius: 10px;
+  --uc-label-shift: 0px;
+
+  --uc-inactive-content-opacity: var(--opacity-deemphasized-strong, 0.6);
+
+  --tabs-navbar-separator-style: none !important;
+
+  --inactive-titlebar-opacity: 1 !important;
+}
+
+#TabsToolbar,
+#tabbrowser-tabs[orient="horizontal"],
+#tabbrowser-arrowscrollbox[orient="horizontal"] {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+#tabbrowser-tabs[orient="horizontal"] .tab-content {
+  translate: 0 var(--uc-label-shift);
+}
+
+#tabbrowser-tabs[orient="horizontal"] .tabbrowser-tab:not(.tablist-keyboard-focus) .tab-background:not([multiselected]) {
+  outline: none !important;
+}
+
+#tabbrowser-tabs[orient="horizontal"] .tabbrowser-tab[selected]:not([multiselected]) {
+  overflow-clip-margin: calc(var(--uc-flare-radius) + 2px) !important;
+}
+
+:is(
+  #tabbrowser-tabs[orient="horizontal"] .tabbrowser-tab[selected]:not([multiselected]) .tab-background,
+  #tabbrowser-tabs[orient="horizontal"] .tab-background[selected]:not([multiselected])
+) {
+  --uc-fill: var(--toolbar-background-color, var(--toolbar-bgcolor, Canvas));
+
+  position: relative !important;
+
+  margin-block-end: 0 !important;
+  min-height: calc(var(--tab-min-height) + var(--tab-margin-block)) !important;
+
+  border: 0 !important;
+  border-radius: var(--uc-tab-radius) var(--uc-tab-radius) 0 0 !important;
+  box-shadow: none !important;
+
+  background: var(--uc-fill) !important;
+
+  &::before,
+  &::after {
+    content: "" !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    width: var(--uc-flare-radius) !important;
+    height: var(--uc-flare-radius) !important;
+    pointer-events: none !important;
+  }
+
+  &::before {
+    right: 100% !important;
+    background: radial-gradient(circle at 0 0,
+      transparent calc(var(--uc-flare-radius) - 0.5px),
+      var(--uc-fill) calc(var(--uc-flare-radius) + 0.5px)) !important;
+  }
+
+  &::after {
+    left: 100% !important;
+    background: radial-gradient(circle at 100% 0,
+      transparent calc(var(--uc-flare-radius) - 0.5px),
+      var(--uc-fill) calc(var(--uc-flare-radius) + 0.5px)) !important;
+  }
+}
+
+/* Room for the first tab's left flare, pinned or not, so the scrollbox doesn't clip it */
+#pinned-tabs-container[orient="horizontal"] > :first-child,
+#tabbrowser-arrowscrollbox[orient="horizontal"] > :first-child:not(#tabbrowser-arrowscrollbox-periphery) {
+  margin-inline-start: calc(var(--uc-flare-radius) - 3px) !important;
+}
+
+/* Room for the last pinned tab's right flare */
+#pinned-tabs-container[orient="horizontal"] > :last-child {
+  margin-inline-end: calc(var(--uc-flare-radius) - 3px) !important;
+}
+
+:root[customtitlebar] .browser-titlebar :is(.tab-content, .titlebar-buttonbox-container) {
+  transition: opacity var(--inactive-window-transition, 0.2s ease) !important;
+}
+
+:root[customtitlebar] .browser-titlebar :is(.tab-content, .titlebar-buttonbox-container) {
+  transition: opacity var(--inactive-window-transition, 0.2s ease) !important;
+}
+
+:root[customtitlebar] .browser-titlebar:-moz-window-inactive :is(.tab-content, .titlebar-buttonbox-container) {
+  opacity: var(--uc-inactive-content-opacity) !important;
+}
